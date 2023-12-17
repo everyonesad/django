@@ -1,20 +1,14 @@
-<html>
-<head>
-    <title>My super blog</title>
-</head>
+{% extends 'blog/base.html' %}
 
-<body>
-    <div>
-        <h1><a href=""/>На главную</a></h1>
-    </div>
+{% block content %}
     {% for post in posts %}
-    <div>
-        <p>Дата публикации: {{ post.published_date }}</p>
-        <h1><a href="">{{ post.title }}</a></h1>
-        <p>
-            {{ post.text|linebreaksbr }}
-        </p>
-    </div>
+    <div class="post">
+        <div class="date">
+            <p>Дата публикации: {{ post.published_date }}</p>
+            <p>Автор: {{ post.author }}</p>
+        </div>
+            <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+            <p>{{ post.text|linebreaksbr }}</p>
+        </div>
     {% endfor %}
-</body>
-</html>
+{% endblock %}
