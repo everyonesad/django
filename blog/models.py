@@ -11,7 +11,7 @@ class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, verbose_name="Заголовок")
     text = models.TextField(verbose_name="Текст статьи")
-    created_data = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
+    created_date = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
     published_date = models.DateTimeField(blank=True, null=True, verbose_name="Дата публикации")
     is_published = models.BooleanField(default=False, verbose_name="Запись опубликована?")
     objects = PostManager()
@@ -22,7 +22,11 @@ class Post(models.Model):
 
     def publish(self):
         self.published_date = timezone.now()
+        self.is_published = True
         self.save()
+
+    # def get_preview_text(self, post):
+    #     return post.get_text_preview()
 
     class Meta:
         verbose_name = 'Запись в блоге'
@@ -41,7 +45,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     author = models.CharField(max_length=200)
     text = models.TextField(verbose_name="Комментарий")
-    created_data = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
+    created_date = models.DateTimeField(default=timezone.now, verbose_name="Дата создания")
     approved_comment = models.BooleanField(default=False, verbose_name="Одобрен?")
 
     def approve(self):
@@ -54,9 +58,3 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = ('created_date', 'text')
-
